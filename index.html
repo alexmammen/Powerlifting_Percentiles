@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            height: 30px;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 120px;
+            height: 40px;
+            background-color: #00bcd4;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+    </style>
+    <title>Powerlifting Percentiles</title>
+</head>
+<body>
+    <h1>Powerlifting Percentiles</h1>
+
+    <form id="lift-form">
+        <label for="squat">Squat:</label><br>
+        <input type="text" id="squat" name="squat"><br>
+        <label for="bench">Bench:</label><br>
+        <input type="text" id="bench" name="bench"><br>
+        <label for="deadlift">Deadlift:</label><br>
+        <input type="text" id="deadlift" name="deadlift"><br>
+        <label for="total">Total:</label><br>
+        <input type="text" id="total" name="total"><br>
+        <label for="dots">Dots:</label><br>
+        <input type="text" id="dots" name="dots"><br>
+        <label for="sex">Sex:</label><br>
+        <input type="radio" name="sex" value="M">Male<br><br><br>
+        <input type="radio" name="sex" value="F">Female<br><br><br>
+        <label for="wc">Weight Class:</label><br>
+        <input type="text" id="wc" name="wc"><br><br>
+        <button type="button" onclick="sendRequest()">Submit</button>
+    </form> 
+
+    <div id="response">
+        <!-- Response from the backend will be displayed here -->
+    </div>
+
+    <script>
+        function sendRequest() {
+            // Get the user's input from the form
+            var formData = new FormData(document.getElementById('lift-form'));
+
+            // Send a POST request to the backend with the user's input
+            fetch('/Users/alexmammen/Documents/Projects/PowerliftingRanks/SBD_Ranking.py', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(responseJson => {
+                // Display the response from the backend on the frontend
+                var responseDiv = document.getElementById('response');
+                responseDiv.innerHTML = '<p>Squat percentile: ' + responseJson.squat_percentile + '%</p>' +
+                                        '<p>Bench percentile: ' + responseJson.bench_percentile + '%</p>' +
+                                        '<p>Deadlift percentile: ' + responseJson.deadlift_percentile + '%</p>' +
+                                        '<p>Total percentile: ' + responseJson.total_percentile + '%</p>' +
+                                        '<p>Dots percentile: ' + responseJson.dots_percentile + '%</p>';
+            });
+        }
+    </script>
+</body>
+</html>
